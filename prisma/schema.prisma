@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum ActionType {
+  BAN_USER
+  UNBAN_USER
+  BAN_BUSINESS
+  UNBAN_BUSINESS
+  REMOVE_REVIEW
+  REMOVE_PRODUCT
+}
+
+enum AdminActionTargetType {
+  USER
+  BUSINESS
+  REVIEW
+  SERVICE
+}
+
+model AdminAction {
+  id      String     @id @default(cuid())
+  action  ActionType
+  details String?
+
+  targetId   String
+  targetType AdminActionTargetType
+
+  adminId String
+  admin   Admin  @relation(fields: [adminId], references: [id])
+}
+
+model Admin {
+  id          String  @id @default(cuid())
+  name        String
+  email       String  @unique
+  password    String  @db.VarChar(255)
+  salt        String  @db.VarChar(255)
+  profile_img String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  AdminAction AdminAction[]
+}
+
+model Buyer {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  password    String   @db.VarChar(255)
+  salt        String   @db.VarChar(255)
+  banned      Boolean  @default(false)
+  profile_img String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Foreign keys
+  orders           Order[]
+  reviews          Review[]
+
+  Conversation Conversation[]
+}
+
+model Business {
+  id          String  @id @default(cuid())
+  name        String
+  email       String @unique
+  password    String @db.VarChar(255)
+  salt        String @db.VarChar(255)
+
+  description String?
+  logo        String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Foreign key
+  Service Service[]
+  Order   Order[]
+  Review  Review[]
+
+  Conversation Conversation[]
+}
+
+enum SenderType {
+  BUYER
+  BUSINESS
+}
+
+model Conversation {
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Participants
+  buyerId    String
+  businessId String
+  serviceId  String
+
+  // Relations
+  buyer    Buyer    @relation(fields: [buyerId], references: [id])
+  business Business @relation(fields: [businessId], references: [id])
+  service  Service  @relation(fields: [serviceId], references: [id])
+
+  messages Message[]
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  content    String
+  created_at DateTime @default(now())
+  read       Boolean  @default(false)
+
+  // Sender information
+  senderId   String
+  senderType SenderType
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  rating     Int      @default(5)
+  comment    String?
+  created_at DateTime @default(now())
+
+  // Foreign keys
+  customerId String
+  businessId String
+  serviceId  String
+
+  // Relations
+  customer Buyer    @relation(fields: [customerId], references: [id])
+  business Business @relation(fields: [businessId], references: [id])
+  service  Service  @relation(fields: [serviceId], references: [id])
+}
+
+model Order {
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+
+  // Foreign keys
+  customerId String
+  businessId String
+  productId  String
+
+  // Relations
+  customer Buyer    @relation(fields: [customerId], references: [id])
+  business Business @relation(fields: [businessId], references: [id])
+  product  Service  @relation(fields: [productId], references: [id])
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float    @default(0.0)
+  rating      Float    @default(0.0)
+  image       String?
+  created_at  DateTime @default(now())
+
+  // Foreign key
+  businessId String
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id])
+  Order    Order[]
+  Review   Review[]
+
+  Conversation Conversation[]
+}
+
+enum Role {
+  BUYER
+  BUSINESS
+  ADMIN
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  sessionId  String   @unique @db.VarChar(512)
+  role       String
+  expires_at DateTime
+
+  targetId   String
+  targetType Role
+}
