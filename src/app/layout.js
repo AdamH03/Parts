@@ -18,6 +18,8 @@ export const metadata = {
   description: "The marketplace for selling parts between dealers",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

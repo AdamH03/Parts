@@ -10,4 +10,11 @@ const nextConfig = {
     }
 };
 
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    // ensures proper dynamic rendering behavior
+    dynamicIO: true,
+  },
+};
 export default nextConfig;
