@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import Navbar from "@/components/Navbar";
 import AdminNav from "@/components/APNav";
 import ReviewsList from "@/components/ReviewsList";
