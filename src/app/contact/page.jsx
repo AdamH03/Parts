@@ -50,7 +50,7 @@ export default function Contact() {
 
                 <div className="w-full h-[26em] rounded-lg overflow-hidden mt-8 border border-gray-200 dark:border-gray-700">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2419.2283775817036!2d-8.578105123392753!3d52.67391362482292!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x485b5e98d8ed0fa1%3A0xe27b1babe50c86df!2sComputer%20Science%20Building%2C%20University%20of%20Limerick%20Campus%2C%20Plassey%20Park%20Rd%2C%20Sreelane%2C%20Limerick%2C%20Ierland!5e0!3m2!1sen!2sie!4v1741598432723!5m2!1sen!2sie"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2308.171184371446!2d-8.140725523280677!3d54.6538113760987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x485fa837d27db581%3A0xbd5dab813d0362e0!2sHerron%20Auto%20-%20Kia!5e0!3m2!1sen!2sie!4v1756998678709!5m2!1sen!2sie"
                         width="100%"
                         height="100%"
                         style={{ border: 0 }}
